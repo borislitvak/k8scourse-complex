@@ -15,7 +15,7 @@ after_success:
   - docker build -t borisplus500/multi-server ./server
   - docker build -t borisplus500/multi-worker ./worker
   # login to dockercli, these variables are defined in travis.ci in this repositority settings
-  - echo "$dockerhub_password" | docker login --username "$dockerhub_user" --password-stdin
+  - echo "$dockerhub_password" | docker login --username "$dockerhub_id" --password-stdin
   # push the image to dockerhub
   - docker push borisplus500/multi-client
   - docker push borisplus500/multi-nginx
