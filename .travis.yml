@@ -1,1 +1,24 @@
-language: node_js
+sudo: required
+
+services:
+  - docker
+
+before_install: 
+  - docker build -t borisplus500/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true borisplus500/react-test npm test
+
+after_success:
+  - docker build -t borisplus500/multi-client ./client
+  - docker build -t borisplus500/multi-nginx ./nginx
+  - docker build -t borisplus500/multi-server ./server
+  - docker build -t borisplus500/multi-worker ./worker
+  # login to dockercli, these variables are defined in travis.ci in this repositority settings
+  - echo "$dockerhub_password" | docker login -u "$dockerhub_user" --password-stdin
+  # push the image to dockerhub
+  - docker push borisplus500/multi-client
+  - docker push borisplus500/multi-nginx
+  - docker push borisplus500/multi-server
+  - docker push borisplus500/multi-worker
+  
